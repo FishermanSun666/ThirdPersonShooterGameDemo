@@ -1,0 +1,35 @@
+﻿  1>Building Custom Rule D:/PersonalProject/SplatoonDemo/CMakeLists.txt
+  main.cpp
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Music.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Shadow.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  Shaders.cpp
+  Camera.cpp
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Music.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  GameLogic.cpp
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Music.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  GameWindow.cpp
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Shadow.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  Renderer.cpp
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Shadow.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  SkyBox.cpp
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  Floor.cpp
+D:\PersonalProject\SplatoonDemo\src\Floor.cpp(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  PlayerView.cpp
+  PhysicalEngine.cpp
+  Shadow.cpp
+D:\PersonalProject\SplatoonDemo\src\Shadow.cpp(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Shadow.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\defineList.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  Music.cpp
+D:\PersonalProject\SplatoonDemo\src\Music.cpp(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\PersonalProject\SplatoonDemo\src\include\Music.h(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+  Generating Code...
+  glad.c
+LINK : fatal error LNK1104: cannot open file 'glfw3.lib'
