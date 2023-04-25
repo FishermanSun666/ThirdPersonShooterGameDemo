@@ -11,6 +11,7 @@ vector<Bullet*> Bullet::bulletQueue;
 vector<Bullet*> Bullet::deadBulletQueue;
 vector<Player*> Player::playerQueue;
 vector<Particle*> Particle::particleQueue;
+
 unsigned int Player::ID = 0;
 
 int GameLogic::playerNum;

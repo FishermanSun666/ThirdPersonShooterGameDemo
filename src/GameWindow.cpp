@@ -1,8 +1,8 @@
 #include <GameWindow.h>
+#include <GameLogic.h>
 #include <Camera.h>
 #include <Renderer.h>
 #include "defineList.h"
-
 
 Camera camera(glm::vec3(0.0f, 15.0f, 0.0f));
 float deltaTime = 0.0f;
@@ -133,7 +133,7 @@ void GameWindow::run() {
         for (auto bullet = Bullet::bulletQueue.begin(); bullet != Bullet::bulletQueue.end();) {
             GameLogic::checkBullet(*bullet, currentFrame);
             if (!(*bullet)->isAlive()) {
-                Bullet::bulletQueue.erase(bullet);
+                bullet = Bullet::bulletQueue.erase(bullet);
                 continue;
             }
             bullet++;
@@ -141,7 +141,7 @@ void GameWindow::run() {
         for (auto player = Player::playerQueue.begin(); player != Player::playerQueue.end();) {
             if (!(*player)->isAlive()) {
                 (*player)->deadBomb(currentFrame, (*player)->getDefeater());
-                Player::playerQueue.erase(player);
+                player = Player::playerQueue.erase(player);
                 continue;
             }
             player++;
@@ -150,7 +150,7 @@ void GameWindow::run() {
             //GameLogic::checkParticle(*bullet, currentFrame);
             (*particle)->update(deltaTime);
             if (!(*particle)->isAlive()) {
-                Particle::particleQueue.erase(particle);
+                particle = Particle::particleQueue.erase(particle);
                 continue;
             }
             particle++;
