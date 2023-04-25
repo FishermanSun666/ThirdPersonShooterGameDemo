@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(SplatDemo)
+project(SplatoonDemo)
 
 set(CMAKE_CXX_STANDARD 14)
 
@@ -12,7 +12,7 @@ if(WIN32)
     link_directories(${PROJECT_SOURCE_DIR}/lib/windows)
     
     
-    add_executable(SplatDemo    src/main.cpp 
+    add_executable(SplatoonDemo src/main.cpp 
                                 src/glad.c
                                 src/Shaders.cpp 
                                 src/Camera.cpp
@@ -25,7 +25,7 @@ if(WIN32)
                                 src/PhysicalEngine.cpp
                                 src/Shadow.cpp 
                                 src/Music.cpp )
-    target_link_libraries(SplatDemo glfw3)# ${IRRKLANG_LIBRARY})
+    target_link_libraries(SplatoonDemo glfw3)# ${IRRKLANG_LIBRARY})
 endif()
 
 if(APPLE)
@@ -58,8 +58,8 @@ if(APPLE)
                         src/Shadow.cpp 
                         src/Music.cpp)
 
-    add_executable(SplatDemo ${SOURCE_FILES})
+    add_executable(SplatoonDemo ${SOURCE_FILES})
 
-    target_link_libraries(SplatDemo "-framework OpenGL")
-    target_link_libraries(SplatDemo "-framework GLUT")
+    target_link_libraries(SplatoonDemo "-framework OpenGL")
+    target_link_libraries(SplatoonDemo "-framework GLUT")
 endif()
