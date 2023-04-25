@@ -1,97 +1,99 @@
-# 系统设计文档——SplatoonDemo
+# System Design Document --SplatoonDemo
 
-## 背景介绍
+## Background Introduction
 
-喷射战士（Splatoon）是任天堂制作发行的第三人称油彩动作射击类游戏，其创新有趣的游戏机制与独特酷炫的视觉效果深受玩家喜爱，并取得销售佳绩、拿下多项大奖。
+Splatoon is a third-person paint action shooter game developed and published by Nintendo. Its innovative and entertaining gameplay mechanics and unique, cool visual effects are deeply loved by players and have achieved excellent sales results and won multiple awards.
 
-本项目以其为原型，运用图形学课程所学，实现游戏的一部分基本机制与视觉效果。
+Based on Splatoon as its prototype, this project aims to apply the knowledge learned in computer graphics courses to implement some basic game mechanics and visual effects.
 
 
-## 实现内容
+##  Implementation
 
-### **（一）游戏机制**
+### **(1) Game Mechanics**
 
-1. 人物可在陆地上自由移动和跳跃（非线性）， 人物之间有碰撞检测。
+1. The character can move freely and jump on the ground (non-linear), and collision detection exists between characters.
    
-2. 人物可以发射油漆弹。
+2. The character can shoot paint bullets.
+3. The paint bullets will leave a painted area on the ground when they hit the ground.
+4. The paint bullets (checked through collision detection) can cause damage to enemy units.
+5. The player's unit can move faster by diving into their own colored area.
+6. Entering an enemy's colored area will have a slowing effect.
+
+### **(2) Visual Effects**
+
+1. Basic scene and object (character, bullet) rendering.
    
-3. 油漆弹落到地面有涂色效果。
-   
-4. 油漆弹（经碰撞检测）可对敌方单位造成伤害。
+2. Paint splatter effect on the ground when bullets hit, along with a paint-like texture.
+3. Red flash effect when characters are hit.
+4. Explosion effect when the character's health is depleted.
+5. Shadows for characters and bullets.
+6. Implementation of single light source lighting effect.
+7. Particle effects generated behind the character as they move.
 
-5. 己方单位可通过潜入己方颜色区域加快移动。
+### **(3) Sound Effects**
+1. Background music.
 
-6. 进入敌方颜色区域会有减速效果
+2. Sound effects for shooting bullets.
+3. Sound effect for character explosion when they die.
 
-### **（二）视觉效果**
+## Framework Design
 
-1. 基本场景与物体（人物、子弹）的绘制。
-   
-2. 子弹对地面的涂色效果与油漆质感。
+### Module design
 
-3. 人物被击中时的红闪效果。
-   
-4. 人物生命值耗尽后的爆裂效果。
+##### PhysicalEngine
 
-5. 人物和子弹的阴影。
-
-6. 实现单光源光照效果
-
-7. 人物在移动时身后会产生粒子效果。
-
-### **（三）音乐效果**
-1. 背景音乐
-
-2. 发射子弹的音效
-
-3. 人物死亡是爆炸的音效
-
-## 框架设计
-
-### 模块设计
-
-##### 物理引擎模块（PhysicalEngine）
-
-    包括物体的基类定义与碰撞判定。
+    This includes the definition of the base class of objects and collision detection.
     
-    物体的基本属性包含位置、重力加速度、颜色、编号（物体编号和所属队伍编号）与存活状态等。
+    The basic properties of objects include position, gravity acceleration, color, number (object number and team number), and survival status.
     
-    物体分为方形物体与球形物体，方形/球形物体分别具有不同的属性（长宽高/半径）。
+    Objects are divided into rectangular objects and spherical objects, and rectangular/spherical objects have different properties (length, width, height/radius).
     
-    实现不同类型物体之间的碰撞检测。（基于上述方形和球形物体类）
+    Implementation of collision detection between different types of objects. (Based on the aforementioned rectangular and spherical object classes)
 
-##### 游戏逻辑模块（GameLogic）
+##### GameLogic
 
-    由物体基类派生出子弹、人物等逻辑物体。
+    The logical objects such as bullets and characters are derived from the base class of objects.
     
-    每轮渲染前调用物理引擎获得碰撞判定信息，进行逻辑物体信息的更新调整。
+    Before each round of rendering, the physics engine is called to obtain collision detection information, and the information of the logical objects is updated and adjusted accordingly.
     
-    例如子弹碰到人物/地板，更新血量，消除子弹，更新物体存储信息等。
+    For example, when a bullet hits a character/floor, the health is updated, the bullet is eliminated, and the object storage information is updated.
 
 
-##### 渲染器模块（Renderer）
+##### Renderer
 
-    对提供的物体数据进行处理并渲染出图像。
+    The provided object data is processed and rendered to generate images.
     
-    例如地板涂色的绘制，人物、子弹等物体的绘制，阴影效果。
+    For example, the painted floor is rendered, and the characters, bullets, and other objects are rendered, along with the shadow effect.
 
 
-##### 游戏窗口模块（GameWindow）
+##### GameWindow
 
-    初始化窗口、初始化并处理鼠标键盘事件，管理照相机，处理游戏逻辑模块、渲染器模块以及照相机的一些交互。
+    Initialize window, initialize and handle mouse and keyboard events, manage camera, handle game logic module, renderer module, and some interactions of the camera.
     
-    主循环：获取时间信息，根据照相机信息获取projection, view矩阵，先调用游戏逻辑模块进行逻辑物体信息的更新调整，再渲染器模块进行渲染。
+    Main loop: Obtain time information, obtain projection and view matrices based on camera information, call the game logic module for logical object information update and adjustment, and then call the renderer module for rendering.
 
 
-### 主要模块实现
+### Implementation of Main Modules
 
-##### 物理引擎模块（PhysicalEngine）
+##### PhysicalEngine
 
-**碰撞检测**
+**Collision Detection**
 
-    主要分为球体和立方体的碰撞、立方体和立方体的碰撞。球体和立方体的碰撞较为简单，不在这里展开说明。
+    Cube Collision Detection:
     
-    立方体的碰撞：将两个立方体记为A和B，首先以立方体B的中心，将B旋转至与坐标轴平行，同时A跟着旋转，取A中的12条棱，分别调用以下线段与立方体求交的函数，判断棱是否与立方体B相交；再将A和B调换这样做一遍。
+    In this project, there are two types of collision detection algorithms: sphere-cube collision and cube-cube collision. Sphere-cube collision is relatively simple and will not be elaborated here.
+    
+    For cube-cube collision detection, we can use the following algorithm:
+    
+    Take two cubes A and B, and first rotate B to be parallel to the coordinate axis, while rotating A accordingly.
+    
+    For each of the 12 edges of cube A, call the function that detects if the edge intersects with cube B, by treating cube B as a group of planes.
+    
+    If any of the edges intersect with cube B, the two cubes have collided.
+    
+    Swap the positions of cube A and B, and repeat the above process.
+    
+    This algorithm can be optimized to improve its efficiency and accuracy.
 
 ```c++
 bool PhysicalEngine::intersect(glm::vec3 p1, glm::vec3 p2, glm::vec3 boxPoint, float halfLength) {
@@ -139,67 +141,72 @@ bool PhysicalEngine::intersect(glm::vec3 p1, glm::vec3 p2, glm::vec3 boxPoint, f
     return true;
 }
 ```
-    线段与立方体判交：由于现在立方体已经与坐标轴平行，因此可以很容易地将线段和立方体分别投影到x、y、z三个轴分别判断。
-
-**非线性移动**
-
-    物体具有体积、质量、位置、位移方向、速度、加速度等属性
+    Intersection Detection between Line Segments and Cubes:
     
-    地面和空气有摩擦系数（己方颜色油漆上较小，敌方颜色油漆上较大）
+    Since the cube is now parallel to the coordinate axis, it is easy to project both the line segment and the cube onto the x, y, and z axes respectively for intersection detection.
     
-    键盘通过WASD控制玩家移动，视为在短时间内有一定的对应方向的加速度
-    
-    物体发生碰撞则直接速度取反（实现方便、但不真实）
-    
-    通过获取程序运行时间模拟时间流逝
+    For each projection, we can calculate the range of values that the line segment and cube cover on that axis. If the two ranges overlap, then there is an intersection between the line segment and the cube on that axis. We can repeat this process for all three axes to determine whether there is an intersection between the line segment and the cube in 3D space.
 
-##### 游戏逻辑模块（GameLogic）
+** Nonlinear Movement**
 
-**键盘、鼠标交互**
+    Objects have properties such as volume, mass, position, displacement direction, velocity, acceleration, etc.
     
-    主要是通过照相机类，来间接控制人物移动。
+    The ground and air have friction coefficients (smaller on own color paint, larger on enemy color paint).
     
-    c键切换模式之后，照相机与人物绑定，照相机的移动、视角变换等操作，转化为对应的人物移动、视角变换。
-
-**子弹射击**
-
-    在发射子弹时，对子弹的起始位置和起始速度做了随机扰动，实现了子弹的散射效果。
+    The keyboard is used to control player movement with the WASD keys, which is considered as having a certain corresponding direction of acceleration in a short period of time.
     
-    子弹的方向与人物的视角朝向一致。
+    When objects collide, their velocities are simply reversed (for convenience of implementation, but not realistic).
     
-    子弹的初速度较大，使其符合"哒哒哒"的音效。
+    Time passage is simulated by obtaining the program's running time.
 
-**子弹类**
+##### GameLogic
 
-    子弹类有一个专门存放当前未落地的子弹的数组。
+**Keyboard and Mouse Interactions**
     
-    在每一次主循环中调用子弹的更新函数，主要是对上抛运动的一个模拟。
+
+    Mainly, the movement of the player is indirectly controlled through the Camera class.
     
-    在子弹生成时，记录了子弹的生成时间，方便进行模拟。
+    After switching to the mode by pressing the "c" key, the camera is bound to the player, and any movements and changes in the camera's viewpoint are translated into corresponding movements and viewpoint changes of the player.
 
-**玩家类**
+**Bullet Shooting**
 
-    玩家的操作有很多，如跳跃、射击、下潜、移动等，每个操作主要就是对当前玩家的状态（比如一些物理属性）进行判断和修改。
+    When firing bullets, random perturbations are added to the initial position and velocity of the bullets, achieving a scattering effect.
     
-    在玩家的更新函数中，根据物理状态和时间流逝，更新玩家的位置等信息。
+    The direction of the bullets is aligned with the player's viewpoint.
     
-    当玩家不受控制时，设置了一个傻瓜AI让它随机游走和操作。
+    The initial velocity of the bullets is relatively high to match the "pop-pop-pop" sound effect.
 
-##### 渲染器模块（Renderer）
+**Bullet Class**
 
-**人物和子弹的绘制**
-
-    人物就是一个立方体，因此直接手工生成一个obj文件即可。
+    The Bullet class has an array specifically for storing currently unfired bullets.
     
-    球体的生成利用了之前实验中的球体类，将生成的vertex和element信息存入了obj文件中。
-
-**地板的绘制**
-
-    地板采用正方形网格，用大小为 (301, 301) 的网格覆盖坐标范围 (-50 .. 50, -50 .. 50)。
+    In each main loop, the update function of the bullets is called, mainly to simulate projectile motion.
     
-    正常来说：每个正方形利用两个对角三角形来进行绘制可以绘制完整的网格。
+    When a bullet is generated, the time of generation is recorded for simulation purposes.
+
+**Player Class**
+
+    There are many operations that the player can perform, such as jumping, shooting, diving, and moving. Each operation mainly involves checking and modifying the current state of the player (such as some physical properties).
     
-    但是在实际调试中我们发现：如果只绘制每个正方形 3/4 的部分，可以营造出透明地板的效果，而且在视觉上有更好的体验。
+    In the update function of the player, the position and other information of the player are updated according to the physical state and the passage of time.
+    
+    When the player is not under direct control, a simple AI is set up to allow the player to randomly move and perform actions.
+
+##### Renderer
+
+**Rendering of Characters and Bullets**
+
+    The characters are represented by a cuboid, so an obj file is manually created to represent the character.
+    
+    To generate the spheres, the sphere class from a previous experiment was used, and the generated vertex and element information were stored in obj files.
+
+**Drawing of the floor**
+
+    The floor is covered by a square grid with a size of (301, 301), which spans the coordinate range of (-50..50, -50..50).
+    
+    Normally, each square can be drawn using two diagonal triangles to complete the grid.
+    
+    However, during actual debugging, it was found that if only 3/4 of each square is drawn, it can create a transparent floor effect and provide a better visual experience.
 
 ```C++
 for(int i = 0; i < FLOOR_SIZE; ++i) {
@@ -227,21 +234,20 @@ for(int i = 0; i < FLOOR_SIZE; ++i) {
 }
 ```
 
-**涂色区域的判定**
+**Determination of painted areas**
 
-    这部分判定从理论上来说是属于地板绘制模块，但是由于这部分比较重要，所以单独来描述。
+    This section describes the coloration area detection, which theoretically belongs to the floor drawing module, but is described separately due to its importance.
     
-    对于涂色区域，我们定义了一个外半径(OUT_RADIUS)、一个内半径(IN_RADIUS)。
+    For the coloration area, we define an outer radius (OUT_RADIUS) and an inner radius (IN_RADIUS).
     
-    当子弹落到地面时，首先通过相应的数学运算将其转化为网格坐标，然后将该网格坐标作为起点进行 BFS。
+    When a bullet hits the ground, it is first converted into a grid coordinate through corresponding mathematical operations, and then the grid coordinate is used as the starting point for BFS.
     
-    设某一个被搜索到的点与初始搜索点距离为 d:
+    Let d be the distance between a searched point and the initial search point:
     
-        1. d < IN_RADIUS : 设置该点涂色强度为 1，并且设置地板颜色为子弹颜色
-        2. d > OUT_RADIUS : continue
-        3. others : 按照 d - IN_RADIUS 的值，将该点涂色强度进行差值处理，并且设置地板颜色为子弹颜色
-    
-    对应的 shader 中会依据涂色强度来对涂色进行噪声处理，已达成较为真实的油漆质感。
+    If d < IN_RADIUS: set the color intensity of the point to 1, and set the floor color to the color of the bullet.
+    If d > OUT_RADIUS: continue
+    Otherwise: interpolate the color intensity of the point based on the difference between d and IN_RADIUS, and set the floor color to the color of the bullet.
+    The corresponding shader performs noise processing on the color intensity to achieve a more realistic paint texture.
 ```c++
     while(!q.empty()){
         BulletPos nowPos = q.front();
@@ -284,89 +290,81 @@ for(int i = 0; i < FLOOR_SIZE; ++i) {
     }
 ```
 
+**Light**
 
-**光照的实现**
+[Reference(learnOpenGL)](https://learnopengl-cn.github.io/05%20Advanced%20Lighting/01%20Advanced%20Lighting/)
 
-[参考教程(learnOpenGL-高级光照)](https://learnopengl-cn.github.io/05%20Advanced%20Lighting/01%20Advanced%20Lighting/)
+    The Blinn-Phong lighting model was used for lighting in this project, and the code was based on the tutorials from learnOpenGL. The light source was set to the position of the sun indicated by the skybox used in this project.
+    
+    When the floor is transparent, the reflection of the lighting and the reflection of the water surface under the skybox blend together, creating a good visual effect.
 
-    本项目的光照使用了：Blinn-Phong 模型，代码参考了 learnOpenGL 上的教程，按照该教程实现的光照。
-    
-    由于本次使用的天空盒有对应的太阳位置，所以光源设定在了天空盒所标识的太阳位置。
-    
-    所以在地板为透明时，光照的反射与天空盒下面的水面反射融合在了一起，有较好的视觉效果。
+**Shadow**
 
-**阴影的实现**
+[Reference(learnOpenGL)](https://learnopengl-cn.github.io/05%20Advanced%20Lighting/03%20Shadows/01%20Shadow%20Mapping/)
 
-[参考教程(learnOpenGL-阴影映射)](https://learnopengl-cn.github.io/05%20Advanced%20Lighting/03%20Shadows/01%20Shadow%20Mapping/)
+    Create a new frame buffer (depth buffer) and position the view at the light source position. Adjust the parameters so that the projection matrix at this time is an orthogonal projection matrix of the light source looking at the plane.
+    
+    Render all objects that need to be shadowed into this frame buffer.
+    
+    After rendering, pass the depth buffer of this buffer as a texture to the floor rendering section.
+    
+    In the floor rendering, map the points to be rendered through the corresponding orthogonal matrix, and compare the depth of the point with the depth in the texture to determine if the point will be occluded.
 
-    创建新的帧缓冲(深度缓冲)，将视角定位到光源位置，调整参数使得此时的投影矩阵为光源位置看向平面的正交投影矩阵。
-    
-    将所有需要渲染阴影的物体渲染进该帧缓冲
-    
-    渲染完毕后，将该缓冲的深度缓冲作为纹理传入地板渲染部分
-    
-    在地板渲染中将要渲染的点通过相应正交矩阵进行映射，比较该点的深度和纹理中的深度来判断该点是否会被遮盖。
+**Game sound**
 
-**游戏音效的实现**
+    The game sound effects are implemented using a cross-platform audio library. irrKlang
+    
+    The sound effect is played at the beginning of the game. 
+    
+    Play shooting sound effects when the player shoots while controlling their character, and play explosion sound effects when a character dies.
 
-    游戏音效使用了跨平台音效库 irrKlang
-    
-    在游戏开始时播放 BGM (「シオカラ節」，喷射2 DLC 中与真三号对战的BGM)
-    
-    在自己操作角色进行射击时播放射击音效，有人物死亡时播放爆炸音效。
+Paint
 
-**油漆效果的实现**
+    For each sampling point on the floor, a color strength is provided to the shader. The shader will calculate the color based on the color strength using different methods.
+    
+    To represent the effect of irregular spray paint, we introduce noise textures. The color strength of the point is subtracted from the noise strength, and two threshold values are set to divide the difference into three parts: strong color, edge color, and no color.
+    
+    For the strongly colored part, in order to show the unevenness of the paint spray, the color is blended with the noise. For the edge color part, a noise threshold is set. If the noise value is high, the color is blended with the floor color based on the color strength to produce a gradient effect. If the noise is small, the floor color is directly taken to produce an irregular spray effect. For the uncolored part, the floor color is directly taken.
 
-    对于每个地板的采样点，将提供给shader一个染色强度。shader会根据染色强度采用不同的颜色计算方式。
-    
-    为了表现出油漆不规则喷溅的效果，我们引入噪声纹理，将该点的染色强度与噪声强度作差，并设置两个阈值，将差值区间分为三部分：强染色、边缘染色、未染色。
-    
-    对于强染色部分，为了表现油漆喷涂的不均匀感，将颜色与噪声进行混合；对于边缘染色部分，再设噪声阈值，若噪声值较大，也根据染色强度与地板颜色进行混合，以产生渐变效果，若噪声较小，则直接取地板颜色，产生不规则喷溅效果；对于未染色部分，直接取地板颜色即可。
+**Particle**
 
-**粒子的实现**
+    Particles are objects with a duration and can inherit properties from the Object class. In this project, the wake effect under the water uses particles.
+    
+    At the beginning of each frame, the particle's position, velocity, and other basic attributes, as well as the life attribute, are updated based on the time interval. If the life attribute is less than 0, the particle is destroyed.
+    
+    The life value can be used to specify different drawing methods and position changes for particles, thereby creating dynamic effects.
 
-    粒子即带有持续时长的物体，可以继承Object类的属性。在本项目中潜地尾迹效果使用了粒子。
-    
-    在每帧开始时用间隔时间更新粒子的位置、速度等基本属性与life属性，若life低于0则销毁粒子。
-    
-    更改life值即更改粒子的持续时间。可以根据life属性为粒子指定不同的绘制方式与位置变化，从而产生动态效果。
+## Deployment and operation
 
-## 部署与运行
+This project uses the following libraries:`glew 2.2.0`, `glfw3.3.2`, `irrKlang 1.6`, `glm 0.9.8.5`, `stb_image`
 
-本项目使用库：`glew 2.2.0`, `glfw3.3.2`, `irrKlang 1.6`, `glm 0.9.8.5`, `stb_image`
+Compilation: Using Cmake to compile projects for cross-platform compatibility
 
-由于我们组有 windows 和 macOS 两种系统，所以我们选择了使用 vscode(windows) + CLion(macOS) ，使用 CmakeLists 的方式来编译项目。
+## Operating Instructions
 
-运行时程序需要从外部读取：模型文件、纹理文件与音效文件，为了便于调试，我们在程序中通过间接路径指定了文件路径，所以程序只能在 cmake-build-debug 运行，不然很可能出现找不到文件的错误。
+Keyboard control
+    W: Control camera move forward/give player forward speed
+    
+    S: Control camera move backward/give player backward speed
+    
+    A: Control camera move left/give player leftward speed
+    
+    D: Control camera move right/give player rightward speed
+    
+    C: Switch between global camera/player camera
+    
+    Q: Switch to the previous player (when in player camera mode)
+    
+    E: Switch to the next player (when in player camera mode)
+    
+    Space: Control camera move upward/control player jump
+    
+    Shift: Control camera move downward/control player dive (only effective on the player with the same color as the paint)
 
-如果需要编译该项目，需要配置 `glew`、`glfw` 以及 `irrKlang 1.6` 的相关环境。
+Mouse control
 
-## 操作说明
-
-键盘控制
+    Mouse movement controls the camera angle.
     
-    W : 控制照相机向正前方移动/给玩家向前的速度
+    Left mouse button fires bullets.
     
-    S : 控制照相机向正后方移动/给玩家向后的速度
-    
-    A : 控制照相机向左移动/给玩家向左的速度
-    
-    D : 控制照相机向右移动/给玩家向右的速度
-    
-    C : 切换全局照相机/玩家视角
-    
-    Q : 切换到上一个玩家（若处于玩家视角）
-    
-    E : 切换到下一个玩家（若处于玩家视角）
-    
-    Space : 控制照相机向正上方移动/控制玩家跳跃
-    
-    Shift : 控制照相机向正下方移动/控制玩家下潜（只有在己方颜色才有效）
-
-鼠标控制
-
-    鼠标移动视角
-    
-    鼠标左键发射子弹
-    
-    鼠标滚轮进行缩放
+    Mouse scroll wheel for zooming.
