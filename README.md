@@ -6,6 +6,9 @@ Splatoon is a third-person paint action shooter game developed and published by 
 
 Based on Splatoon as its prototype, this project aims to apply the knowledge learned in computer graphics courses to implement some basic game mechanics and visual effects.
 
+## Demo video link
+
+https://youtu.be/KOZ5kqWw3yA
 
 ##  Implementation
 
